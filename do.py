@@ -1,50 +1,53 @@
 class docls(object):
     def __init__(self):
         self.inst = []
-        self.loop = False
 
     def __iter__(self):
         for i in self.inst:
             yield i
 
     def emit(self, *inst):
-        # print(self.loop, inst)
         self.inst.append(inst)
 
-    def reemit(self, *inst):
-        inst = list(inst)
-        inst[-1] = self.loop
-        self.emit(*inst)
-
     def __add__(self, num):
-        self.emit('add', num, self.loop)
+        self.emit('add', num)
         return self
 
     def __sub__(self, num):
-        self.emit('sub', num, self.loop)
+        self.emit('sub', num)
         return self
 
     def __gt__(self, do):
-        self.emit('rgt', None, self.loop)
+        self.emit('rgt')
         for di in do.inst:
-            self.reemit(*di)
+            self.emit(*di)
         do.inst = self.inst
-        do.loop = self.loop
         return do
 
     def __lt__(self, do):
-        self.emit('lft', None, self.loop)
+        self.emit('lft')
         for di in do.inst:
-            self.reemit(*di)
+            self.emit(*di)
         do.inst = self.inst
-        do.loop = self.loop
-        return do
+        return self
 
-    def __or__(self, do):
-        self.loop = True
+    def __rshift__(self, do):
+        self.emit('lop')
         for di in do.inst:
-            self.reemit(*di)
+            self.emit(*di)
         do.inst = self.inst
+        return self
+
+    def __lshift__(self, do):
+        p = len(self.inst) - 1
+        c = 0
+        while p > -1:
+            if self.inst[p][0] == 'lop':
+                self.inst[p] = ('lop', c)
+            p -= 1
+            c += 1
+        for di in do.inst:
+            self.emit(*di)
         return self
 
 
