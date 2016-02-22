@@ -1,4 +1,4 @@
-class docls(object):
+class nopcls(object):
     def __init__(self):
         self.inst = []
 
@@ -17,28 +17,28 @@ class docls(object):
         self.emit('sub', num)
         return self
 
-    def __gt__(self, do):
+    def __gt__(self, nop):
         self.emit('rgt')
-        for di in do.inst:
+        for di in nop.inst:
             self.emit(*di)
-        do.inst = self.inst
-        return do
+        nop.inst = self.inst
+        return nop
 
-    def __lt__(self, do):
+    def __lt__(self, nop):
         self.emit('lft')
-        for di in do.inst:
+        for di in nop.inst:
             self.emit(*di)
-        do.inst = self.inst
+        nop.inst = self.inst
         return self
 
-    def __rshift__(self, do):
+    def __rshift__(self, nop):
         self.emit('lop')
-        for di in do.inst:
+        for di in nop.inst:
             self.emit(*di)
-        do.inst = self.inst
+        nop.inst = self.inst
         return self
 
-    def __lshift__(self, do):
+    def __lshift__(self, nop):
         p = len(self.inst) - 1
         c = 0
         while p > -1:
@@ -46,10 +46,10 @@ class docls(object):
                 self.inst[p] = ('lop', c)
             p -= 1
             c += 1
-        for di in do.inst:
+        for di in nop.inst:
             self.emit(*di)
         return self
 
 
-def do():
-    return docls()
+def nop():
+    return nopcls()

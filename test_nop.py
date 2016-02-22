@@ -1,11 +1,11 @@
-from do import do
+from nop import nop
 
 import unittest
 
 
 class DoTest(unittest.TestCase):
     def test_add_sub(self):
-        inst = list(do() + 10 + 2 - 1 + 1)
+        inst = list(nop() + 10 + 2 - 1 + 1)
 
         self.assertEqual(len(inst), 4)
         self.assertEqual(inst[0], ('add', 10))
@@ -14,7 +14,7 @@ class DoTest(unittest.TestCase):
         self.assertEqual(inst[3], ('add', 1))
 
     def test_rgt(self):
-        inst = list(do() + 1 > do() + 3)
+        inst = list(nop() + 1 > nop() + 3)
 
         self.assertEqual(len(inst), 3)
         self.assertEqual(inst[0], ('add', 1))
@@ -22,7 +22,7 @@ class DoTest(unittest.TestCase):
         self.assertEqual(inst[2], ('add', 3))
 
     def test_lft(self):
-        inst = list(do() + 1 > do() + 3 < do() - 2 > do() + 1)
+        inst = list(nop() + 1 > nop() + 3 < nop() - 2 > nop() + 1)
 
         self.assertEqual(len(inst), 7)
         self.assertEqual(inst[0], ('add', 1))
@@ -35,9 +35,9 @@ class DoTest(unittest.TestCase):
 
     def test_loop(self):
         inst = list(
-            do() + 2 >> (
-                do() - 1 > do() + 2 < do()
-            ) << do() + 5
+            nop() + 2 >> (
+                nop() - 1 > nop() + 2 < nop()
+            ) << nop() + 5
         )
 
         self.assertEqual(len(inst), 7)
