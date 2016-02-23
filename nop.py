@@ -50,6 +50,10 @@ class nopcls(object):
             self.emit(*di)
         return self
 
+    def __xor__(self, nop):
+        self.emit('wrt')
+        return self
+
 
 def nop():
     return nopcls()
