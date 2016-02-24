@@ -3,12 +3,12 @@ from nop import nop
 import unittest
 
 
-class DoTest(unittest.TestCase):
+class InstructionsTest(unittest.TestCase):
     def test_add_sub(self):
-        inst = list(nop() + 10 + 2 - 1 + 1)
+        inst = list(nop() + 5 + 2 - 1 + 1)
 
         self.assertEqual(len(inst), 4)
-        self.assertEqual(inst[0], ('add', 10))
+        self.assertEqual(inst[0], ('add', 5))
         self.assertEqual(inst[1], ('add', 2))
         self.assertEqual(inst[2], ('sub', 1))
         self.assertEqual(inst[3], ('add', 1))
@@ -69,6 +69,38 @@ class DoTest(unittest.TestCase):
         self.assertEqual(inst[3], ('rgt',))
         self.assertEqual(inst[4], ('red',))
         self.assertEqual(inst[5], ('add', 2))
+
+
+class ExecutionTest(unittest.TestCase):
+    def test_add_sub(self):
+        res = nop() + 49 + (5 + 2 - 1 + 1) ^ nop()
+
+        self.assertEqual(str(res), '8')
+
+    def test_rgt(self):
+        res = nop() + 1 > nop() < nop() + 49 ^ nop()
+
+        self.assertEqual(str(res),  '2')
+
+    def test_lft(self):
+        res = nop() + 1 > nop() + 3 < nop() - 2 > nop() + 48 ^ nop()
+
+        self.assertEqual(str(res), '3')
+
+    def test_loop(self):
+        res = (
+            nop() + 49 > nop() + 52 >> (
+                nop() - 1 < nop() + 1 > nop()
+            ) << nop() < nop() ^ nop()
+        )
+
+        self.assertEqual(str(res), 'e')
+
+    def test_read(self):
+        res = ~nop() - 32 ^ nop()
+        res.input_func = lambda: 'a'
+
+        self.assertEqual(str(res), 'A')
 
 
 if __name__ == '__main__':
