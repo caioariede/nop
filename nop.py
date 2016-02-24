@@ -9,6 +9,10 @@ class nopcls(object):
     def emit(self, *inst):
         self.inst.append(inst)
 
+    def __invert__(self):
+        self.emit('red')
+        return self
+
     def __add__(self, num):
         self.emit('add', num)
         return self

@@ -59,6 +59,17 @@ class DoTest(unittest.TestCase):
         self.assertEqual(inst[3], ('add', 3))
         self.assertEqual(inst[4], ('wrt',))
 
+    def test_read(self):
+        inst = list(~nop() + 1 ^ nop() > ~nop() + 2)
+
+        self.assertEqual(len(inst), 6)
+        self.assertEqual(inst[0], ('red',))
+        self.assertEqual(inst[1], ('add', 1))
+        self.assertEqual(inst[2], ('wrt',))
+        self.assertEqual(inst[3], ('rgt',))
+        self.assertEqual(inst[4], ('red',))
+        self.assertEqual(inst[5], ('add', 2))
+
 
 if __name__ == '__main__':
     unittest.main()
