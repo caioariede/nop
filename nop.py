@@ -6,14 +6,19 @@ class nopcls(object):
         self.inst = []
         self.input_func = input
 
-    def __str__(self):
+    def run(self):
         s = namedtuple('scope', 'pos max_pos stack write_stack')
         s.pos = 0
         s.max_pos = 9
         s.stack = [0] * 10
         s.write_stack = []
 
-        def run(i):
+        def run(it):
+            try:
+                i = it.next()
+            except StopIteration:
+                return
+
             if i[0] == 'add':
                 s.stack[s.pos] += i[1]
             elif i[0] == 'sub':
@@ -29,22 +34,22 @@ class nopcls(object):
                 s.stack[s.pos] = ord(self.input_func())
             elif i[0] == 'wrt':
                 s.write_stack.append(s.stack[s.pos])
-            elif i[0] == 'lop':
+
+            if i[0] == 'lop':
                 lopinsts = []
                 for x in range(i[1]):
                     lopinsts.append(it.next())
                 while s.stack[s.pos] > 0:
-                    for lopi in lopinsts:
-                        run(lopi)
+                    run(iter(lopinsts))
 
-        it = iter(self.inst)
-        while True:
-            try:
-                run(it.next())
-            except StopIteration:
-                break
+            run(it)
 
-        return ''.join(map(chr, s.write_stack))
+        run(iter(self.inst))
+
+        return s
+
+    def __str__(self):
+        return ''.join(map(chr, self.run().write_stack))
 
     def __iter__(self):
         for i in self.inst:
@@ -84,19 +89,22 @@ class nopcls(object):
         return self
 
     def __lshift__(self, nop):
-        p = len(self.inst) - 1
-        c = 0
-        while p > -1:
-            if self.inst[p][0] == 'lop':
-                self.inst[p] = ('lop', c)
-            p -= 1
-            c += 1
+        for i, inst in enumerate(self.inst):
+            if inst[0] == 'lop':
+                break
+
+        self.inst[i] = ('lop', len(self.inst) - (i+1))
+
         for di in nop.inst:
             self.emit(*di)
+
         return self
 
     def __xor__(self, nop):
         self.emit('wrt')
+        for di in nop.inst:
+            self.emit(*di)
+        nop.inst = self.inst
         return self
 
     def emit(self, *inst):

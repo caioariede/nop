@@ -49,6 +49,28 @@ class InstructionsTest(unittest.TestCase):
         self.assertEqual(inst[5], ('lft',))
         self.assertEqual(inst[6], ('add', 5))
 
+    def test_nested_loop(self):
+        inst = list(
+            nop() + 2 >> (
+                nop() > nop() + 4 >> (
+                    nop() - 1 > nop() + 6 < nop()
+                ) << nop() - 3
+            ) << nop() + 5
+        )
+
+        self.assertEqual(len(inst), 11)
+        self.assertEqual(inst[0], ('add', 2))
+        self.assertEqual(inst[1], ('lop', 8))
+        self.assertEqual(inst[2], ('rgt',))
+        self.assertEqual(inst[3], ('add', 4))
+        self.assertEqual(inst[4], ('lop', 4))
+        self.assertEqual(inst[5], ('sub', 1))
+        self.assertEqual(inst[6], ('rgt',))
+        self.assertEqual(inst[7], ('add', 6))
+        self.assertEqual(inst[8], ('lft',))
+        self.assertEqual(inst[9], ('sub', 3))
+        self.assertEqual(inst[10], ('add', 5))
+
     def test_write(self):
         inst = list(nop() > nop() + 2 < nop() + 3 ^ nop())
 
@@ -95,6 +117,17 @@ class ExecutionTest(unittest.TestCase):
         )
 
         self.assertEqual(str(res), 'e')
+
+    def test_nested_loop(self):
+        res = (
+            nop() + 2 >> (
+                nop() > nop() + 24 >> (
+                    nop() - 1 > nop() + 1 < nop()
+                ) << nop() < nop() - 1
+            ) << nop() > nop() > nop() + 5 ^ nop()
+        )
+
+        self.assertEqual(str(res), '5')
 
     def test_read(self):
         res = ~nop() - 32 ^ nop()
