@@ -1,19 +1,24 @@
+import sys
+
 from collections import namedtuple
 
 
 class nopcls(object):
     def __init__(self):
         self.inst = []
-        self.input_func = input
+        try:
+            self.input_func = raw_input
+        except:
+            self.input_func = input
 
-    def run(self):
+    def run(self, stdout=None):
         s = namedtuple('scope', 'pos max_pos stack write_stack')
         s.pos = 0
         s.max_pos = 9
         s.stack = [0] * 10
         s.write_stack = []
 
-        def run(it):
+        def run(it, stdout):
             try:
                 i = it.next()
             except StopIteration:
@@ -31,8 +36,14 @@ class nopcls(object):
                     s.max_pos += 10
                     s.stack += [0] * 10
             elif i[0] == 'red':
-                s.stack[s.pos] = ord(self.input_func())
+                try:
+                    r = self.input_func()
+                except EOFError:
+                    return
+                if r:
+                    s.stack[s.pos] = ord(r)
             elif i[0] == 'wrt':
+                stdout(chr(s.stack[s.pos]))
                 s.write_stack.append(s.stack[s.pos])
 
             if i[0] == 'lop':
@@ -40,11 +51,21 @@ class nopcls(object):
                 for x in range(i[1]):
                     lopinsts.append(it.next())
                 while s.stack[s.pos] > 0:
-                    run(iter(lopinsts))
+                    run(iter(lopinsts), stdout)
 
-            run(it)
+            run(it, stdout)
 
-        run(iter(self.inst))
+        if stdout is None:
+            def stdout(s):
+                pass
+        else:
+            if not callable(stdout):
+                stdout = sys.stdout.write
+
+        try:
+            run(iter(self.inst), stdout)
+        except KeyboardInterrupt:
+            pass
 
         return s
 
