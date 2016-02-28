@@ -12,10 +12,7 @@ print(
             > nop() + 3
             > nop() + 1
 
-            < nop()
-            < nop()
-            < nop()
-            < nop()
+            < 4
 
         ) << nop()
 

@@ -29,9 +29,9 @@ class nopcls(object):
             elif i[0] == 'sub':
                 s.stack[s.pos] -= i[1]
             elif i[0] == 'lft':
-                s.pos -= 1
+                s.pos -= i[1]
             elif i[0] == 'rgt':
-                s.pos += 1
+                s.pos += i[1]
                 if s.pos > s.max_pos:
                     s.max_pos += 10
                     s.stack += [0] * 10
@@ -89,17 +89,23 @@ class nopcls(object):
         return self
 
     def __gt__(self, nop):
-        self.emit('rgt')
-        for di in nop.inst:
-            self.emit(*di)
-        nop.inst = self.inst
-        return nop
+        if isinstance(nop, nopcls):
+            self.emit('rgt', 1)
+            for di in nop.inst:
+                self.emit(*di)
+            nop.inst = self.inst
+            return nop
+        self.emit('rgt', nop)
+        return self
 
     def __lt__(self, nop):
-        self.emit('lft')
-        for di in nop.inst:
-            self.emit(*di)
-        nop.inst = self.inst
+        if isinstance(nop, nopcls):
+            self.emit('lft', 1)
+            for di in nop.inst:
+                self.emit(*di)
+            nop.inst = self.inst
+            return nop
+        self.emit('lft', nop)
         return self
 
     def __rshift__(self, nop):

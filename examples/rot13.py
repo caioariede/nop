@@ -7,11 +7,8 @@ from nop import nop
     ~nop() + 1 >> (
         # -[
         nop() - 1 >> (
-            nop()
-
             # >>++++
-            > nop()
-            > nop() + 4
+            (nop() > 2) + 4
 
             # [>++++++++<-]
             >> (
@@ -35,9 +32,7 @@ from nop import nop
                 > nop() - 1
 
                 # [>>>]
-                >> (
-                    nop() > nop() > nop() > nop()
-                ) << nop()
+                >> ( nop() > 3 ) << nop()
 
                 # <[
                 < nop() >> (
@@ -48,33 +43,25 @@ from nop import nop
                         > nop() + 1
                         < nop() - 1
                     # ]
-                    ) << nop()
+                    ) <<
 
                     # >>+>
-                    > nop()
-                    > nop() + 1
-                    > nop()
+                    (nop() > 2) + 1 > nop()
 
                 # ]
-                ) << nop()
+                ) <<
 
                 # <<<<<-
-                < nop()
-                < nop()
-                < nop()
-                < nop()
-                < nop() - 1
+                (nop() < 5) - 1
 
             # ]
             ) << nop()
 
         # ]
-        ) << nop()
+        ) <<
 
         # >>>
-        > nop()
-        > nop()
-        > nop()
+        nop() > (nop() > 2)
 
         # [-]
         >> ( nop() - 1 ) << nop()
@@ -88,7 +75,7 @@ from nop import nop
 
             # [<->+++[-]]
             >> (
-                nop() < nop() - 1 > nop() + 3 >> (
+                (nop() < 1) - 1 > nop() + 3 >> (
                     nop() - 1
                 ) << nop()
             ) << nop()
@@ -105,88 +92,69 @@ from nop import nop
 
             # <[
             < nop() >> (
-                nop()
-
                 # >-[>+>>]
-                > nop() - 1 >> ( nop() > nop() + 1 > nop() > nop() ) << nop()
+                (nop() > 1) - 1 >> ( (nop() > 1) + 1 > 2 ) << nop()
 
                 # >[
                 > nop() >> (
                     # +[<+>-]
                     nop() + 1 >> (
-                        nop() < nop() + 1 > nop() - 1
-                    ) << nop()
+                        (nop() < 1) + (1 > 1) - 1
+                    ) <<
 
                     # >+>>
-                    > nop() + 1
-                    > nop()
-                    > nop()
+                    (nop() > 1) + 1 > 2
 
                 # ]
                 ) << nop()
             
                 # <<<<<-
-                < nop()
-                < nop()
-                < nop()
-                < nop()
-                < nop() - 1
+                < (nop() < 4) - 1
 
             # ]
-            ) << nop()
+            ) <<
 
             # >>
-            > nop()
-            > nop()
+            (nop() > 1) > nop()
 
             # [<+>-]
-            >> ( nop() < nop() + 1 > nop() - 1 ) << nop()
+            >> ( (nop() < 1) + 1 > nop() - 1 ) << nop()
 
             # >[
             > nop() >> (
                 # -[-<<[-]>>]
                 nop() - 1 >> (
-                    nop() - 1
-
-                    < nop()
-                    < nop()
-
-                    >> ( nop() - 1 ) << nop() > nop() > nop()
-                ) << nop()
+                    ((nop() - 1) < 2) >> ( nop() - 1 ) << nop() > 2
+                ) <<
 
                 # <<
-                < nop()
-                < nop()
+                (nop() < 2)
 
                 # [<<->>-]
                 >> (
-                    nop() < nop() < nop() - 1 > nop() > nop() > nop() - 1
-                ) << nop()
+                    (nop() < 2) - 1 > (nop() > 3) - 1
+                ) <<
 
                 # >>
-                > nop()
-                > nop()
+                (nop() > 2)
 
             # ]
-            ) << nop()
+            ) <<
 
             # <<
-            < nop()
-            < nop()
+            (nop() < 1) < nop()
 
             # [<<+>>-]
-            >> (
-                nop() < nop() < nop() + 1 > nop() > nop() - 1
-            ) << nop()
+            >> ( ((nop() < 2) + 1 > 2) - 1 ) << nop()
 
         # ]
         ) << nop()
 
         # <[-]
-        < nop() >> ( nop() - 1 ) << nop()
+        < nop() >> ( nop() - 1 ) <<
 
         # <.[-]
-        < nop() ^ nop() >> ( nop() - 1 ) << nop()
+        (nop() < 1 ) ^ nop() >> ( nop() - 1 ) << nop()
 
         # <-,+
         < nop() - 1
